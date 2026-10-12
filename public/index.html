@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SnapShift Studio — SSD Upgrade & Workspace Migration Suite</title>
+  <meta name="description" content="State-of-the-art workspace and system snapshot tool for seamless SSD upgrades. Back up files, developer environments, settings, and software without OS bloat.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand-header">
+        <div class="brand-logo">
+          <div class="logo-icon">⚡</div>
+          <div class="logo-glow"></div>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">SnapShift</span>
+          <span class="brand-subtitle">SSD Migration Studio</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button id="nav-dashboard-btn" class="nav-item active" data-tab="dashboard">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Storage Topology</span>
+        </button>
+        <button id="nav-snapshot-btn" class="nav-item" data-tab="snapshot">
+          <span class="nav-icon">📸</span>
+          <span class="nav-label">Snapshot Studio</span>
+          <span id="badge-total-size" class="nav-badge">Scanning...</span>
+        </button>
+        <button id="nav-restore-btn" class="nav-item" data-tab="restore">
+          <span class="nav-icon">🔄</span>
+          <span class="nav-label">Restore Center</span>
+        </button>
+        <button id="nav-software-btn" class="nav-item" data-tab="software">
+          <span class="nav-icon">📦</span>
+          <span class="nav-label">Software Hub</span>
+          <span id="badge-software-count" class="nav-badge count">--</span>
+        </button>
+        <button id="nav-guide-btn" class="nav-item" data-tab="guide">
+          <span class="nav-icon">🧭</span>
+          <span class="nav-label">Migration Guide</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-status-card">
+        <div class="status-indicator-row">
+          <span class="status-dot pulse"></span>
+          <span class="status-title">Hardware Detection</span>
+        </div>
+        <div class="status-detail">
+          <span class="status-label">Source SSD:</span>
+          <span id="sidebar-ssd-name" class="status-value highlight-warn">Detecting...</span>
+        </div>
+        <div class="status-detail">
+          <span class="status-label">Safe HDD:</span>
+          <span id="sidebar-hdd-name" class="status-value highlight-safe">Detecting...</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Action Bar -->
+      <header class="top-bar">
+        <div class="page-header-info">
+          <h1 id="page-title">Storage Topology & System Matrix</h1>
+          <p id="page-desc">Real-time inspection of your physical drives, partitions, and user workspace.</p>
+        </div>
+        <div class="top-actions">
+          <button id="rescan-system-btn" class="btn btn-secondary">
+            <span class="btn-icon">🔄</span>
+            <span>Rescan System</span>
+          </button>
+          <button id="header-quick-snapshot-btn" class="btn btn-primary glow-cyan">
+            <span class="btn-icon">⚡</span>
+            <span>Capture Snapshot to HDD</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Views -->
+      <div class="tab-container">
+        
+        <!-- TAB 1: DASHBOARD & STORAGE TOPOLOGY -->
+        <section id="tab-dashboard" class="tab-pane active">
+          <!-- Critical SSD Replacement Warning Banner -->
+          <div class="alert-banner banner-warning">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+              <h3>SSD Replacement Target Detected</h3>
+              <p>Your Windows OS and personal files currently reside on the <strong>PNY CS2040 128GB SSD (C:)</strong>. When you physically replace this drive, all files on C: will be swapped out. Your internal <strong>Western Digital 1TB HDD (D: & F:)</strong> is completely safe and holds plenty of free space for snapshots.</p>
+            </div>
+            <div class="alert-badge">C: will be replaced</div>
+          </div>
+
+          <!-- Physical Disks Grid -->
+          <h2 class="section-title">Physical Storage Devices</h2>
+          <div id="physical-disks-grid" class="cards-grid cols-2">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Volumes and Partitions -->
+          <h2 class="section-title" style="margin-top: 30px;">Volumes & Free Space Assessment</h2>
+          <div id="volumes-grid" class="cards-grid cols-3">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Workspace Overview Stat Cards -->
+          <h2 class="section-title" style="margin-top: 30px;">Workspace Snapshot Ready Status</h2>
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon-wrapper cyan">📁</div>
+              <div class="stat-info">
+                <span class="stat-label">Personal Folders</span>
+                <span id="stat-personal-size" class="stat-value">Calculating...</span>
+                <span class="stat-sub">Desktop, Docs, Photos, Media</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon-wrapper violet">💻</div>
+              <div class="stat-info">
+                <span class="stat-label">Developer Configs</span>
+                <span id="stat-dev-size" class="stat-value">Calculating...</span>
+                <span class="stat-sub">.ssh, .vscode, .gemini, git</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon-wrapper emerald">📦</div>
+              <div class="stat-info">
+                <span class="stat-label">Apps to Reinstall</span>
+                <span id="stat-apps-count" class="stat-value">Detecting...</span>
+                <span class="stat-sub">1-Click Winget automated setup</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon-wrapper amber">🏷️</div>
+              <div class="stat-info">
+                <span class="stat-label">Environment PATH</span>
+                <span id="stat-env-count" class="stat-value">Ready</span>
+                <span class="stat-sub">User & System Variables</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: SNAPSHOT STUDIO -->
+        <section id="tab-snapshot" class="tab-pane">
+          <div class="studio-header-card">
+            <div class="target-drive-selector">
+              <div class="selector-label-group">
+                <label for="destination-drive-select" class="selector-label">Backup Destination (Internal HDD):</label>
+                <span class="selector-hint">Files are saved safely to this drive so they survive the SSD swap.</span>
+              </div>
+              <div class="selector-controls">
+                <select id="destination-drive-select" class="custom-select">
+                  <option value="D:">D: (GameZone - 193.4 GB Free) [Recommended]</option>
+                  <option value="F:">F: (Entertainment - 79.2 GB Free)</option>
+                </select>
+                <button id="select-all-items-btn" class="btn btn-ghost">Select All</button>
+                <button id="deselect-all-items-btn" class="btn btn-ghost">Deselect All</button>
+              </div>
+            </div>
+            <div class="studio-cta">
+              <div class="selection-summary">
+                <span class="summary-label">Estimated Snapshot Size:</span>
+                <span id="selected-total-size" class="summary-size">22.87 GB</span>
+                <span id="selected-total-files" class="summary-count">(24,615 files)</span>
+              </div>
+              <button id="start-snapshot-btn" class="btn btn-primary btn-large glow-cyan">
+                <span class="btn-icon">⚡</span>
+                <span>Create System Snapshot</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Category Sections -->
+          <div class="categories-accordion">
+            <!-- Personal User Data -->
+            <div class="category-block">
+              <div class="category-header">
+                <div class="category-title-group">
+                  <span class="category-icon">📁</span>
+                  <div>
+                    <h3 class="category-title">Personal User Folders</h3>
+                    <p class="category-desc">Your primary files stored on the current C: SSD drive.</p>
+                  </div>
+                </div>
+                <div class="category-meta">
+                  <span id="personal-category-size" class="category-size-badge">16.9 GB</span>
+                  <input type="checkbox" id="check-group-personal" class="category-master-check" checked>
+                </div>
+              </div>
+              <div id="items-personal-list" class="category-items-grid">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- Developer Environments & Configs -->
+            <div class="category-block">
+              <div class="category-header">
+                <div class="category-title-group">
+                  <span class="category-icon">🛠️</span>
+                  <div>
+                    <h3 class="category-title">Developer Environment & Toolchains</h3>
+                    <p class="category-desc">SSH credentials, git configurations, IDE states, and agent profiles.</p>
+                  </div>
+                </div>
+                <div class="category-meta">
+                  <span id="developer-category-size" class="category-size-badge">704 MB</span>
+                  <input type="checkbox" id="check-group-developer" class="category-master-check" checked>
+                </div>
+              </div>
+              <div id="items-developer-list" class="category-items-grid">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- App Settings & Browsers -->
+            <div class="category-block">
+              <div class="category-header">
+                <div class="category-title-group">
+                  <span class="category-icon">⚙️</span>
+                  <div>
+                    <h3 class="category-title">Application Settings & Browsers</h3>
+                    <p class="category-desc">VS Code user settings, extensions list, Edge & Chrome bookmarks.</p>
+                  </div>
+                </div>
+                <div class="category-meta">
+                  <span id="settings-category-size" class="category-size-badge">12 MB</span>
+                  <input type="checkbox" id="check-group-settings" class="category-master-check" checked>
+                </div>
+              </div>
+              <div id="items-settings-list" class="category-items-grid">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- System PATH and Software Reinstall Packages -->
+            <div class="category-block">
+              <div class="category-header">
+                <div class="category-title-group">
+                  <span class="category-icon">📦</span>
+                  <div>
+                    <h3 class="category-title">System Environment & Software Installers</h3>
+                    <p class="category-desc">User & System PATH registry keys + 1-Click Winget automated setup script.</p>
+                  </div>
+                </div>
+                <div class="category-meta">
+                  <span class="category-size-badge">Config Script</span>
+                  <input type="checkbox" id="check-group-system" class="category-master-check" checked>
+                </div>
+              </div>
+              <div id="items-system-list" class="category-items-grid">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: RESTORE CENTER -->
+        <section id="tab-restore" class="tab-pane">
+          <div class="restore-banner">
+            <div class="restore-banner-text">
+              <h2>New Windows Installation Restore Studio</h2>
+              <p>When you install Windows on your new SSD, launch SnapShift or run the generated batch script from your HDD to restore all your files into your new user account.</p>
+            </div>
+            <button id="refresh-snapshots-btn" class="btn btn-secondary">
+              <span class="btn-icon">🔍</span>
+              <span>Find Snapshots on HDD</span>
+            </button>
+          </div>
+
+          <h2 class="section-title">Discovered Snapshots on Internal HDD</h2>
+          <div id="snapshots-list-container" class="snapshots-container">
+            <!-- Injected by JS -->
+          </div>
+
+          <!-- Standalone Zero-Dependency Tools Reminder -->
+          <div class="standalone-tools-card">
+            <h3>⚡ Offline Zero-Dependency Restoration Available</h3>
+            <p>If you don't want to install Node.js on the new Windows install right away, every snapshot contains native tools:</p>
+            <div class="tools-tags">
+              <span class="tool-tag"><code>RESTORE_ALL_FILES.bat</code> (1-Click Native CMD)</span>
+              <span class="tool-tag"><code>RESTORE_INTERACTIVE.ps1</code> (PowerShell Selector)</span>
+              <span class="tool-tag"><code>RESTORE_VIEWER.html</code> (Offline Browser View)</span>
+              <span class="tool-tag"><code>Reinstall_All_Apps.bat</code> (Winget Batch)</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 4: SOFTWARE HUB -->
+        <section id="tab-software" class="tab-pane">
+          <div class="software-header">
+            <div>
+              <h2>Software Inventory & 1-Click Reinstaller</h2>
+              <p>These 54 packages will be automatically reinstalled on your fresh Windows system with Winget.</p>
+            </div>
+            <div class="software-search-wrapper">
+              <input type="text" id="software-search-input" placeholder="Search application..." class="search-input">
+            </div>
+          </div>
+
+          <div id="software-table-container" class="software-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Application Name</th>
+                  <th>Winget Package ID</th>
+                  <th>Installed Version</th>
+                  <th>Reinstall Support</th>
+                </tr>
+              </thead>
+              <tbody id="software-table-body">
+                <!-- Injected by JS -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- TAB 5: MIGRATION GUIDE -->
+        <section id="tab-guide" class="tab-pane">
+          <div class="guide-container">
+            <div class="guide-hero">
+              <span class="badge">STEP-BY-STEP WORKFLOW</span>
+              <h2>How to Successfully Replace Your SSD Without Losing Anything</h2>
+              <p>Follow these 5 simple stages to swap your drive and restore your entire workspace seamlessly.</p>
+            </div>
+
+            <div class="guide-steps-list">
+              <div class="guide-step-card completed">
+                <div class="step-number">1</div>
+                <div class="step-body">
+                  <h3>Capture Snapshot to Internal HDD (Current Step)</h3>
+                  <p>Use SnapShift Studio right now to take a complete snapshot of all files, configurations, and software lists onto drive <code>D:</code> or <code>F:</code>. This preserves all your personal data completely outside the SSD.</p>
+                  <span class="step-status">Ready in SnapShift Studio</span>
+                </div>
+              </div>
+
+              <div class="guide-step-card">
+                <div class="step-number">2</div>
+                <div class="step-body">
+                  <h3>Prepare Windows 11 Bootable USB Media</h3>
+                  <p>Insert a spare USB flash drive (8GB+) and download Microsoft's official <strong>Media Creation Tool</strong> to make an official Windows 11 installation drive.</p>
+                  <a href="https://www.microsoft.com/software-download/windows11" target="_blank" class="step-link">Official Microsoft Media Creation Tool &rarr;</a>
+                </div>
+              </div>
+
+              <div class="guide-step-card">
+                <div class="step-number">3</div>
+                <div class="step-body">
+                  <h3>Physically Swap the SSD Inside Your PC</h3>
+                  <p>Turn off the PC, disconnect the power cable. Remove the old <strong>PNY 128GB SSD</strong> and insert your new SSD into the slot. <strong style="color:var(--accent-emerald);">Crucial: Keep the internal Western Digital HDD connected!</strong> It safely holds your snapshot files.</p>
+                </div>
+              </div>
+
+              <div class="guide-step-card">
+                <div class="step-number">4</div>
+                <div class="step-body">
+                  <h3>Install Clean Windows on the New SSD</h3>
+                  <p>Boot your PC with the Windows installation USB. Select the new SSD as the install destination. Complete the initial Windows account setup.</p>
+                </div>
+              </div>
+
+              <div class="guide-step-card">
+                <div class="step-number">5</div>
+                <div class="step-body">
+                  <h3>Restore Everything with 1-Click from HDD!</h3>
+                  <p>Open File Explorer, go to your HDD (<code>D:\SnapShift_Snapshots\...</code>), and double-click <code>RESTORE_ALL_FILES.bat</code>. It restores all your files, developer keys, environment variables, and auto-installs your apps!</p>
+                  <span class="step-status">Zero technical effort required</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Real-time Progress Modal -->
+  <div id="progress-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="spinner-dot"></div>
+          <h3 id="modal-title">Creating System Snapshot</h3>
+        </div>
+        <button id="cancel-task-btn" class="btn btn-ghost-danger">Cancel</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Circular / Large percentage display -->
+        <div class="progress-stats-visual">
+          <div class="progress-ring-box">
+            <svg class="progress-ring" width="120" height="120">
+              <circle class="ring-bg" stroke-width="8" stroke="rgba(255,255,255,0.08)" fill="transparent" r="50" cx="60" cy="60"/>
+              <circle id="progress-ring-circle" class="ring-fill" stroke-width="8" stroke="var(--accent-cyan)" stroke-linecap="round" fill="transparent" r="50" cx="60" cy="60"/>
+            </svg>
+            <div id="progress-percent-label" class="ring-text">0%</div>
+          </div>
+          <div class="progress-info-rows">
+            <div class="progress-info-row">
+              <span class="pi-label">Current Stage:</span>
+              <span id="progress-category-label" class="pi-val highlight">Initializing</span>
+            </div>
+            <div class="progress-info-row">
+              <span class="pi-label">Active File:</span>
+              <span id="progress-file-label" class="pi-val mono">Preparing...</span>
+            </div>
+            <div class="progress-info-row">
+              <span class="pi-label">Data Transferred:</span>
+              <span id="progress-bytes-label" class="pi-val">0 B / 22.8 GB</span>
+            </div>
+            <div class="progress-info-row">
+              <span class="pi-label">Transfer Speed:</span>
+              <span id="progress-speed-label" class="pi-val">-- MB/s</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-bar-track">
+          <div id="modal-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+
+        <div class="modal-log-box" id="modal-log-stream">
+          <div class="log-line info">Snapshot engine initiated. Analyzing source files...</div>
+        </div>
+      </div>
+
+      <div class="modal-footer hidden" id="modal-footer-success">
+        <div class="success-message">
+          <span class="success-icon">🎉</span>
+          <span>Snapshot successfully captured to HDD!</span>
+        </div>
+        <button id="modal-close-btn" class="btn btn-primary">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-shelf"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "snapshift-studio",
+  "version": "1.0.0",
+  "description": "Ultra-reliable workspace & system snapshot and migration suite for SSD upgrades",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "migration",
+    "backup",
+    "ssd-upgrade",
+    "snapshot",
+    "restore",
+    "winget"
+  ],
+  "author": "SnapShift Studio",
+  "license": "MIT"
+}
